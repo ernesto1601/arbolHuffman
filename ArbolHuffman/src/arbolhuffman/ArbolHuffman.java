@@ -15,7 +15,7 @@ public class ArbolHuffman {
   static  Arbol arbol;
   static ArrayList<Nodo> lista;
   private Stack<Integer> tablaDeco;
-  
+  static ArrayList<Nodo> temp  = new ArrayList();
     public static void main(String[] args) throws IOException {
         
         ArbolHuffman arbolH = new ArbolHuffman();
@@ -73,6 +73,7 @@ public class ArbolHuffman {
                 
                 Nodo n = new Nodo(auxiliar,contador);
                 lista.add(n);
+                temp.add(n);
                 contador=0;
             }
         }
@@ -83,7 +84,39 @@ public class ArbolHuffman {
          
             System.out.println("caracter: "+ lista.get(n).data()+ " frecuencia: "+ lista.get(n).frecuency());
         }
+        registroRemplazo(temp);
         createTree();
+    }
+    public void registroRemplazo(ArrayList<Nodo> lista){
+        ArrayList<Nodo> temp  = new ArrayList();
+        temp = lista;
+        int num1 = 0;
+        int num2 = 0;
+        int suma = 0;
+        int tam = temp.size()*2;
+        for (int i = 0; i < temp.size(); i++) {
+            System.out.print(","+temp.get(i).frecuency());
+        }
+        System.out.println("\n");
+        try {
+             for (int i = 0; i < tam; i=i+2) {
+            num1 = temp.get(i).frecuency();
+            num2 = temp.get(i+1).frecuency();
+            suma = num1 + num2;
+            Nodo nuevo = new Nodo('\0',suma);
+            temp.add(nuevo);
+            ordenaLista(temp);
+            String frecu="";
+            
+            for (int j = i+2; j < tam; j++) {
+                try {
+                    frecu = frecu + ","+  temp.get(j).frecuency();
+                } catch (Exception e) {}
+            }
+            System.out.println("Registro: "+frecu);
+        }   
+            } catch (Exception e) {}
+        
     }
     
     /*Se utiliza este método para ordenar el ArrayList cuando sea necesario*/
