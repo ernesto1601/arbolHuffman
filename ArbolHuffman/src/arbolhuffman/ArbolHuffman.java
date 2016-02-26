@@ -1,0 +1,257 @@
+
+package arbolhuffman;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+
+public class ArbolHuffman {
+
+  static  Arbol arbol;
+  static ArrayList<Nodo> lista;
+  
+    public static void main(String[] args) throws IOException {
+        
+        ArbolHuffman arbolH = new ArbolHuffman();
+        arbol = new Arbol();
+        String nombre_archivo, texto;
+        int texto_tam;
+        char[] caracteres;
+        Scanner sc = new Scanner(System.in);
+        
+        
+        System.out.println("introduzca el archivo a comprimir");
+        nombre_archivo=sc.nextLine();
+        texto = arbolH.muestraContenido(nombre_archivo);
+        texto_tam = texto.length();
+        System.out.println("el tamano de la cadena es: "+texto_tam);
+        caracteres = texto.toCharArray();
+        arbolH.tablaFrecuencia(caracteres);
+        
+    }
+    //Se encarga de leer el archivo seleccionado para mostrar el mensaje que se va a comprimir
+    public String muestraContenido(String archivo) throws FileNotFoundException, IOException{
+        
+        String cadena,texto="";
+        FileReader f = new FileReader(archivo);
+        BufferedReader b = new BufferedReader(f);
+        while((cadena = b.readLine()) != null){
+            System.out.println(cadena);
+            texto +=cadena;
+        }
+        
+        b.close();
+        return texto;
+    }
+    
+    /*Se encarga de imprimir la tabla de frecuencia de los carateres del mensaje
+      y los caracteres con sus frecuencias los almacena en un nodo que se agrega
+      a un ArrayList que guarda nodos
+    */
+    public void tablaFrecuencia(char[] letras){
+        
+        lista = new ArrayList();
+        int contador=0;
+        char auxiliar;
+        
+        for(int i=0; i<letras.length;i++){
+            if(letras[i] != 0){
+                auxiliar = letras[i];
+                for(int m=0;m<letras.length;m++){
+                    if(auxiliar == letras[m]){
+                        contador++;
+                        letras[m] = '\0';
+                    }
+                }
+                
+                Nodo n = new Nodo(auxiliar,contador);
+                lista.add(n);
+                contador=0;
+            }
+        }
+        
+        lista = ordenaLista(lista);
+        for(int n=0;n<lista.size();n++){
+            
+         
+            System.out.println("caracter: "+ lista.get(n).data()+ " frecuencia: "+ lista.get(n).frecuency());
+        }
+        createTree();
+    }
+    
+    /*Se utiliza este método para ordenar el ArrayList cuando sea necesario*/
+    
+    public ArrayList<Nodo> ordenaLista(ArrayList<Nodo> lista){
+        
+         int i, j, aux;
+         Nodo a;
+         for(i=0;i<lista.size()-1;i++){
+              for(j=0;j<lista.size()-i-1;j++){
+                   if(lista.get(j+1).frecuency()<lista.get(j).frecuency()){
+                      a=lista.get(j+1);
+                      lista.set(j+1,lista.get(j));
+                      
+                      lista.set(j,a);
+                     
+                   }
+               }
+         	}
+         return lista;
+    }
+    
+    /*
+        Método encargado de generar el arbol a partir de los nodos del ArrayList
+        
+    */
+
+    public void createTree(){
+        int tam = lista.size()*2;
+        for(int x = 0;x<tam;x+=2){
+            int izquierdo=0, derecho = 0;
+            izquierdo = lista.get(x).frecuency();
+            try{
+            derecho = lista.get(x+1).frecuency();
+            }catch(Exception e){
+                
+            }
+            int padre = izquierdo+derecho;
+            Nodo rama = new Nodo('\0',padre);
+            lista.add(rama);
+            ordenaLista(lista);
+        }
+        System.out.println("");
+        /*for(int n=0;n<lista.size();n++){
+            
+         
+            System.out.println("caracter: "+ lista.get(n).data()+ " frecuencia: "+ lista.get(n).frecuency());
+        }*/
+        
+        System.out.println("FORMACION DEL ARBOL");
+        for(int i=lista.size()-1;i>=0; i-=2){
+            
+            arbol.insertar(lista.get(i),lista.get(i-1));
+        }
+        
+        arbol.preOrder();
+        
+        JFrame arbolB = new JFrame("Arbol grafico");
+		 		arbolB.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		 		arbolB.add(dibujaArbol());
+		 		arbolB.setSize(600,800);
+		 		arbolB.setVisible(true);
+    }
+
+    /*Método encargado de dibujar el árbol*/
+    public JPanel dibujaArbol(){
+		return new Grafico(arbol);
+	}
+}
+
+/*Clase que se encarga de almacenar el arbol con los nodos*/
+class Arbol{
+    Nodo raiz;
+    
+    public Arbol(){
+        raiz = null;
+    }
+    
+    public void insertar(Nodo nodo1, Nodo nodo2){
+       
+        if(raiz == null){
+            raiz = nodo1;
+           
+        }else{
+           int val1 = nodo1.frecuency();
+           int val2 = nodo2.frecuency();
+           int resultado = val1+val2;
+           buscar(resultado,nodo1,nodo2);
+        }
+        
+    }
+    
+    public void buscar (int aux,Nodo nodoIzq, Nodo nodoDer)
+      {
+          buscar (raiz,aux,nodoIzq,nodoDer);
+          bandera = true;
+          
+      }
+    
+    private void buscar (Nodo root, int valor,Nodo nodoIzq, Nodo nodoDer)
+      {
+          Nodo reco = root;
+        /*
+          Método para recorrer el árbol en el sentido inOrder(izquierda, raíz, derecha)
+        */
+          if(bandera){
+          if (reco != null)
+          {    if(reco.frecuency()==valor && reco.data()=='\0'&& reco.der == null && reco.izq == null)
+                  {
+                      reco.der = nodoIzq;
+                      reco.izq = nodoDer;
+                      bandera = false;
+                  }
+                if(reco != null){
+                    buscar (reco.izq,valor,nodoIzq,nodoDer);
+                    buscar (reco.der,valor,nodoIzq,nodoDer);
+                }
+          }
+          }else
+              return;
+
+      }
+    
+    boolean bandera = true;
+    
+         private void preOrder (Nodo reco)
+      {
+          if (reco != null)
+          {
+              System.out.println("Frecuencia: "+reco.frecuency() + "Dato: "+reco.data());
+              preOrder (reco.izq);
+              preOrder (reco.der);
+          }
+      }
+
+      public void preOrder ()
+      {
+          preOrder (raiz);
+          System.out.println();
+      }
+      
+      public boolean esHoja(Nodo nodo){
+          if(nodo.izq == null && nodo.der==null)
+              return true;
+          return false;
+      }
+}
+
+/*Clase que genera los nodos que conforman el árbol*/
+
+class Nodo{
+    
+    char caracter;
+    int frecuencia;
+    Nodo der,izq;
+    
+    public Nodo(char caracter,int frecuencia){
+        this.caracter = caracter;
+        this.frecuencia = frecuencia;
+    }
+    
+    public char data(){
+        return caracter;
+    }
+    
+    public int frecuency(){
+        return frecuencia;
+    }
+    
+    public void setFrecuency(int frecuencia){
+        this.frecuencia = frecuencia;
+    }
+}
