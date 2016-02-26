@@ -14,6 +14,7 @@ public class ArbolHuffman {
 
   static  Arbol arbol;
   static ArrayList<Nodo> lista;
+  private Stack<Integer> tablaDeco;
   
     public static void main(String[] args) throws IOException {
         
@@ -32,7 +33,8 @@ public class ArbolHuffman {
         System.out.println("el tamano de la cadena es: "+texto_tam);
         caracteres = texto.toCharArray();
         arbolH.tablaFrecuencia(caracteres);
-        
+        System.out.println("TABLA DECO V0.1");
+        arbolH.tablaDecodificacion();
     }
     //Se encarga de leer el archivo seleccionado para mostrar el mensaje que se va a comprimir
     public String muestraContenido(String archivo) throws FileNotFoundException, IOException{
@@ -150,6 +152,33 @@ public class ArbolHuffman {
     public JPanel dibujaArbol(){
 		return new Grafico(arbol);
 	}
+    
+    //Diana&Carlos
+    //Diana&Carlos
+    public void tablaDecodificacion(){
+        tablaDeco = new Stack<>();
+        Nodo root = arbol.getRaiz();
+        preOrdertd(root);
+    }
+    //Diana&Carlos
+    private void preOrdertd(Nodo reco){
+        if(reco!=null){
+            if(reco != arbol.getRaiz()){
+                tablaDeco.push(reco.peso);
+            }
+            if(arbol.esHoja(reco)){
+                System.out.println(reco.caracter + "::" + tablaDeco.toString());
+            }
+            preOrdertd(reco.izq);
+
+            preOrdertd(reco.der);
+            try {
+                tablaDeco.pop();
+            }catch (EmptyStackException ex){
+                System.err.println("The stack is empty");
+            }
+        }
+    }
 }
 
 /*Clase que se encarga de almacenar el arbol con los nodos*/
@@ -191,6 +220,10 @@ class Arbol{
           if (reco != null)
           {    if(reco.frecuency()==valor && reco.data()=='\0'&& reco.der == null && reco.izq == null)
                   {
+                      //Diana&Carlos B|
+                      nodoIzq.setPeso(1);
+                      nodoDer.setPeso(0);
+                      //>>>>>>>>>>>>>>>>>>>
                       reco.der = nodoIzq;
                       reco.izq = nodoDer;
                       bandera = false;
@@ -207,27 +240,32 @@ class Arbol{
     
     boolean bandera = true;
     
-         private void preOrder (Nodo reco)
-      {
-          if (reco != null)
-          {
-              System.out.println("Frecuencia: "+reco.frecuency() + "Dato: "+reco.data());
-              preOrder (reco.izq);
-              preOrder (reco.der);
-          }
-      }
+    private void preOrder (Nodo reco)
+    {
+        if (reco != null)
+        {
+            System.out.println("Frecuencia: "+reco.frecuency() + "Dato: "+reco.data());
+            preOrder (reco.izq);
+            preOrder (reco.der);
+        }
+    }
 
-      public void preOrder ()
-      {
-          preOrder (raiz);
-          System.out.println();
-      }
+    public void preOrder ()
+    {
+        preOrder (raiz);
+        System.out.println();
+    }
       
-      public boolean esHoja(Nodo nodo){
+    public boolean esHoja(Nodo nodo){
           if(nodo.izq == null && nodo.der==null)
               return true;
           return false;
       }
+    
+    //Diana&Carlos
+    public Nodo getRaiz() {
+        return this.raiz;
+    }
 }
 
 /*Clase que genera los nodos que conforman el árbol*/
@@ -236,6 +274,7 @@ class Nodo{
     
     char caracter;
     int frecuencia;
+    int peso;
     Nodo der,izq;
     
     public Nodo(char caracter,int frecuencia){
@@ -254,4 +293,9 @@ class Nodo{
     public void setFrecuency(int frecuencia){
         this.frecuencia = frecuencia;
     }
+    
+    public void setPeso(int peso){
+        this.peso = peso;
+    }
+    
 }
