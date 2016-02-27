@@ -3,6 +3,7 @@ package arbolhuffman;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
@@ -14,7 +15,11 @@ public class ArbolHuffman {
 
   static  Arbol arbol;
   static ArrayList<Nodo> lista;
+  //Diana&Carlos
   private Stack<Integer> tablaDeco;
+  private String code;
+  private ArrayList<tablaDeco> tableD;
+  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   static ArrayList<Nodo> temp  = new ArrayList();
     public static void main(String[] args) throws IOException {
         
@@ -35,6 +40,11 @@ public class ArbolHuffman {
         arbolH.tablaFrecuencia(caracteres);
         System.out.println("TABLA DECO V0.1");
         arbolH.tablaDecodificacion();
+        System.out.println("Tree code");
+        System.out.println("Escriba el mensaje a incluir:");
+        String mensaje = sc.nextLine();
+        arbolH.codeTree();
+        arbolH.message(mensaje);
     }
     //Se encarga de leer el archivo seleccionado para mostrar el mensaje que se va a comprimir
     public String muestraContenido(String archivo) throws FileNotFoundException, IOException{
@@ -187,19 +197,21 @@ public class ArbolHuffman {
 	}
     
     //Diana&Carlos
-    //Diana&Carlos
     public void tablaDecodificacion(){
         tablaDeco = new Stack<>();
+        tableD = new ArrayList<>();
         Nodo root = arbol.getRaiz();
         preOrdertd(root);
     }
-    //Diana&Carlos
+
     private void preOrdertd(Nodo reco){
         if(reco!=null){
             if(reco != arbol.getRaiz()){
                 tablaDeco.push(reco.peso);
             }
             if(arbol.esHoja(reco)){
+                tablaDeco tb = new tablaDeco(tablaDeco.toString(),reco.caracter);
+                tableD.add(tb);
                 System.out.println(reco.caracter + "::" + tablaDeco.toString());
             }
             preOrdertd(reco.izq);
@@ -212,6 +224,68 @@ public class ArbolHuffman {
             }
         }
     }
+
+    private void codeTree(){
+        code = "";
+        preOrderct(arbol.getRaiz());
+        int w = (int) 'Ⱶ';
+        code+= Integer.toBinaryString(w);
+    }
+    
+    private void preOrderct(Nodo reco){
+        if(reco!=null){
+            
+            if(arbol.esHoja(reco)){
+                code+= 1;
+                code+=0;
+                int a = (int) reco.caracter;
+                code+=Integer.toBinaryString(a);
+            }else
+                code+=0; 
+            preOrderct(reco.izq);
+
+            preOrderct(reco.der);
+            
+        }
+    }
+
+    public void message(String message){
+        boolean founded = false;
+        char[] allCM = message.toCharArray();
+        for (int i = 0; i < allCM.length; i++) {
+            for (int j = 0; j < tableD.size(); j++) {
+                if (tableD.get(j).caracter == allCM[i]){
+                    founded = true;
+                    String[] cd = tableD.get(j).code.split("(\\[)|(\\])|(,)");
+                    for (String q: cd) {
+                        code+=q.trim();
+                    }
+                    break;
+                }else
+                    founded = false;
+            }
+            if (!founded){
+                System.err.println("No se puede generar el mensaje, insuficientes caracteres para formular el mensaje");
+                break;
+            }
+        }
+        if (founded){
+            generateData();
+        }
+    }
+
+    public void generateData(){
+        FileOutputStream fr = null;
+        try {
+            fr = new FileOutputStream("Code.huffman");
+            fr.write(code.getBytes());
+            fr.flush();
+            fr.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 }
 
 /*Clase que se encarga de almacenar el arbol con los nodos*/
@@ -294,11 +368,11 @@ class Arbol{
               return true;
           return false;
       }
-    
-    //Diana&Carlos
-    public Nodo getRaiz() {
-        return this.raiz;
+
+    Nodo getRaiz() {
+        return raiz;
     }
+
 }
 
 /*Clase que genera los nodos que conforman el árbol*/
@@ -331,4 +405,32 @@ class Nodo{
         this.peso = peso;
     }
     
+}
+
+//Diana&Carlos
+class tablaDeco{
+
+    char caracter;
+    String code;
+
+    tablaDeco(String code,char caracter){
+        this.caracter = caracter;
+        this.code = code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public void setCaracter(char caracter) {
+        this.caracter = caracter;
+    }
+
+    public char getCaracter() {
+        return caracter;
+    }
+
+    public String getCode() {
+        return code;
+    }
 }
