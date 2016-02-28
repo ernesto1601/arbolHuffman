@@ -228,8 +228,9 @@ public class ArbolHuffman {
     private void codeTree(){
         code = "";
         preOrderct(arbol.getRaiz());
-        int w = (int) 'Ⱶ';
-        code+= Integer.toBinaryString(w);
+        //int w = (int) 'Ⱶ';
+        //code+= Integer.toBinaryString(w);
+        code+="11000001";
     }
     
     private void preOrderct(Nodo reco){
@@ -238,8 +239,12 @@ public class ArbolHuffman {
             if(arbol.esHoja(reco)){
                 code+= 1;
                 code+=0;
+                
                 int a = (int) reco.caracter;
                 code+=Integer.toBinaryString(a);
+                if(reco.caracter == ' '){
+                    code+=0;
+                }
             }else
                 code+=0; 
             preOrderct(reco.izq);
@@ -266,6 +271,11 @@ public class ArbolHuffman {
             }
             if (!founded){
                 System.err.println("No se puede generar el mensaje, insuficientes caracteres para formular el mensaje");
+                //message(message);
+                System.out.println("Escriba el mensaje: ");
+                Scanner sc = new Scanner(System.in);
+                String mensajito = sc.nextLine();
+                message(mensajito);
                 break;
             }
         }
