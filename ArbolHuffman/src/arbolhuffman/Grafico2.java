@@ -88,8 +88,11 @@ public class Grafico2 extends JPanel{
               center = izq + ld.width + hojaAhoja/2;
 
             String valor="";
-      
+          if(nodo.der == null && nodo.izq == null){
+            valor=""+nodo.caracter;
+          }else{
             valor="s/c";
+          }
          
 
           int width = fm.stringWidth(valor);
@@ -110,8 +113,11 @@ public class Grafico2 extends JPanel{
          
          g.draw(rect);
           String valor="";
-          
+          if(nodo.der == null && nodo.izq == null){
+            valor=""+nodo.caracter;
+          }else{
             valor="s/c";
+          }
           
 
          g.drawString(valor, rect.x + 3, rect.y + Y2);

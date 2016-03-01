@@ -22,6 +22,7 @@ public class LeeHuffman{
         static String archivo;
         static String arbol="";
         static String ms=""; 
+        static String decodems = "";
         static ArrayList<String> caracteresBin = new ArrayList();// guarda los codigos de los caracteres
 
 
@@ -36,6 +37,7 @@ public class LeeHuffman{
             
             creaNodos(arbol);//comenzara a recontruir el arbol a partir de el codigo del arbol
             recontruyeArbol();
+            decodeMessage(ms);
             
             /*
                 CODIGO QUE FALTA:
@@ -126,9 +128,8 @@ public class LeeHuffman{
 					character += codigos[i];
 					i++;
 				}
-				char ch = (char)Integer.parseInt(character);
-				String theChar = Character.toString(ch);
-				NodoArbol hijo1 = new NodoArbol(theChar);
+				String asd = (char)Integer.parseInt(character, 2) + "";
+				NodoArbol hijo1 = new NodoArbol(asd);
 				aux.izq = hijo1;
 				arbolNodos.add(guardar);
 				i--;
@@ -139,9 +140,10 @@ public class LeeHuffman{
 					character += codigos[i];
 					i++;
 				}
-				NodoArbol nodo = new NodoArbol("1");
+				String asd = (char)Integer.parseInt(character, 2) + "";
+				NodoArbol nodo = new NodoArbol(asd);
 				arbolNodos.add(nodo);
-				//i+=8;
+				i--;
 			}
 		}
 
@@ -216,6 +218,30 @@ public class LeeHuffman{
            System.out.println("Arbol: "+arbol);
            System.out.println("Mensaje: "+ms);
        }
+       
+       //Carlos
+	public void decodeMessage(String mss){
+		NodoArbol LastNode = null;
+		NodoArbol current = raizA;
+		String message[] = mss.split("");
+		for (String code : message) {
+			LastNode = current;
+			if (code.equals("0")) {
+				current = LastNode.izq;
+				if (current.izq == null && current.der == null) {
+					decodems += current.caracter;
+					current = raizA;
+				}
+			}else {
+				current = LastNode.der;
+				if (current.izq == null && current.der == null) {
+					decodems += current.caracter;
+					current = raizA;
+				}
+			}
+		}
+		System.out.println("Mensaje : " + decodems);
+	}
 }
 
 
