@@ -15,15 +15,39 @@ public class ArbolHuffman {
 
   static  Arbol arbol;
   static ArrayList<Nodo> lista;
+  static LeeHuffman lh = new LeeHuffman();
+
   //Diana&Carlos
   private Stack<Integer> tablaDeco;
   private String code;
   private ArrayList<tablaDeco> tableD;
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   static ArrayList<Nodo> temp  = new ArrayList();
+  static ArbolHuffman arbolH = new ArbolHuffman();
+
     public static void main(String[] args) throws IOException {
+        arbolH.menu();
         
-        ArbolHuffman arbolH = new ArbolHuffman();
+        
+    }
+    public void menu() throws IOException{
+        Scanner entrada = new Scanner(System.in);
+        System.out.println("Que desea hacer...");
+        System.out.println("1.- Comprimir archivo");
+        System.out.println("2.- Descomprimir archivo");
+        int opcion = entrada.nextInt();
+        switch(opcion){
+            case 1:
+                arbolH.iniciar();
+                break;
+            case 2:
+                lh.iniciar();
+                break;
+            default:
+                break;
+        }
+    }
+    public void iniciar() throws IOException{
         arbol = new Arbol();
         String nombre_archivo, texto;
         int texto_tam;
