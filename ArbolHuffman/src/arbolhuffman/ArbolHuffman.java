@@ -282,13 +282,11 @@ public class ArbolHuffman {
             
             if(arbol.esHoja(reco)){
                 code+= 1;
-                code+=0;
                 
-                int a = (int) reco.caracter;
-                code+=Integer.toBinaryString(a);
-                if(reco.caracter == ' '){
-                    code+=0;
-                }
+                char auxw = reco.caracter;
+                String a = Character.toString(auxw);
+                code+= String.format("%8s", Integer.toBinaryString(a.getBytes()[0])).replace(' ', '0');
+
             }else
                 code+=0; 
             preOrderct(reco.izq);

@@ -120,15 +120,28 @@ public class LeeHuffman{
 					aux = nodo2;
 					i++;
 				}
-				i--;
-				NodoArbol hijo1 = new NodoArbol("1");
+				i++;
+				String character = "";
+				for (int az = 0; az < 8;az++){
+					character += codigos[i];
+					i++;
+				}
+				char ch = (char)Integer.parseInt(character);
+				String theChar = Character.toString(ch);
+				NodoArbol hijo1 = new NodoArbol(theChar);
 				aux.izq = hijo1;
 				arbolNodos.add(guardar);
-				i+=9;// se salta la parte del dato del nodo;
+				i--;
 			}else{
+				i++;
+				String character = "";
+				for (int az = 0; az < 8;az++){
+					character += codigos[i];
+					i++;
+				}
 				NodoArbol nodo = new NodoArbol("1");
 				arbolNodos.add(nodo);
-				i+=8;
+				//i+=8;
 			}
 		}
 
