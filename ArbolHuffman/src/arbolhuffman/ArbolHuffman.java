@@ -69,7 +69,27 @@ public class ArbolHuffman {
         String mensaje = sc.nextLine();
         arbolH.codeTree();
         arbolH.message(mensaje);
+        /*Descriptado*/
+        String decodificar = arbolH.muestraContenido("Code.huffman");
+        arbolH.crearArbol(decodificar);
     }
+    ////////////////////////////////////////////////////////
+        public void crearArbol(String mensaje){
+        String[] convecion = new String[mensaje.length()]; 
+        ArrayList<Character> octetos = new ArrayList(); 
+        char[] caracteres = mensaje.toCharArray();
+        for (int i = 0; i < mensaje.length(); i++) {
+            convecion = mensaje.split("11000001");
+        }
+        System.out.println("Arbol: "+convecion[0]);
+        System.out.println("\n");
+        System.out.println("Mensaje: "+convecion[1]);
+        String arbol = convecion[0];
+        for (int i = 0; i < arbol.length(); i++) {
+            arbol.charAt(i);
+        }
+    }
+    ////////////////////////////////////////////////////////
     //Se encarga de leer el archivo seleccionado para mostrar el mensaje que se va a comprimir
     public String muestraContenido(String archivo) throws FileNotFoundException, IOException{
         
