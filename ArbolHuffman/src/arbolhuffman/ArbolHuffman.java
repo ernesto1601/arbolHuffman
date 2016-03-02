@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 
 public class ArbolHuffman {
 
-  static  Arbol arbol;
+  static Arbol arbol;
   static ArrayList<Nodo> lista;
   static LeeHuffman lh = new LeeHuffman();
 
